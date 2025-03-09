@@ -33,3 +33,4 @@ Para executar o projeto localmente, você precisará ter instalado:
 ```bash
 cd frontend
 npm install
+ng serve
