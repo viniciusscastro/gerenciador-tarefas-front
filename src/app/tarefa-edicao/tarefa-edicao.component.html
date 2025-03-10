@@ -1,0 +1,66 @@
+<div class="container">
+    <header>
+      <h1>Sistema de Gerenciamento de Tarefas</h1>
+    </header>
+  
+    <main>
+      <section class="card">
+        <div class="header-with-back">
+          <button class="btn-back" (click)="cancelar()">← Voltar</button>
+          <h2>Editar Tarefa</h2>
+        </div>
+  
+        @if (carregando) {
+          <div class="loading">
+            <p>Carregando dados da tarefa...</p>
+          </div>
+        } @else if (erro) {
+          <div class="error-container">
+            <p>{{ erro }}</p>
+            <button class="btn-primary" (click)="cancelar()">Voltar para a lista</button>
+          </div>
+        } @else {
+          <form [formGroup]="tarefaForm" (ngSubmit)="atualizarTarefa()">
+            <div class="form-group">
+              <label for="titulo">Título*</label>
+              <input type="text" id="titulo" formControlName="titulo" placeholder="Digite o título da tarefa">
+              @if (tarefaForm.get('titulo')?.invalid && tarefaForm.get('titulo')?.touched) {
+                <div class="error-message">
+                  Título é obrigatório
+                </div>
+              }
+            </div>
+            
+            <div class="form-group">
+              <label for="descricao">Descrição*</label>
+              <textarea id="descricao" formControlName="descricao" rows="5" placeholder="Digite a descrição da tarefa"></textarea>
+              @if (tarefaForm.get('descricao')?.invalid && tarefaForm.get('descricao')?.touched) {
+                <div class="error-message">
+                  Descrição é obrigatória
+                </div>
+              }
+            </div>
+            
+            <div class="form-group">
+              <label for="dataTermino">Data de Término*</label>
+              <input type="date" id="dataTermino" formControlName="dataTermino">
+              @if (tarefaForm.get('dataTermino')?.invalid && tarefaForm.get('dataTermino')?.touched) {
+                <div class="error-message">
+                  Data de término é obrigatória
+                </div>
+              }
+            </div>
+            
+            <div class="button-group">
+              <button type="submit" class="btn-primary">Salvar Alterações</button>
+              <button type="button" class="btn-cancel" (click)="cancelar()">Cancelar</button>
+            </div>
+          </form>
+        }
+      </section>
+    </main>
+  
+    <footer>
+      <p>Sistema de Gerenciamento de Tarefas &copy; 2025</p>
+    </footer>
+  </div>

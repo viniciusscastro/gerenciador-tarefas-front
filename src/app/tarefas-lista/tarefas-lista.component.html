@@ -1,0 +1,86 @@
+<div class="container">
+    <header>
+      <h1>Sistema de Gerenciamento de Tarefas</h1>
+    </header>
+  
+    <main>
+      <section class="card">
+        <h2>Nova Tarefa</h2>
+        <form [formGroup]="tarefaForm" (ngSubmit)="criarTarefa()">
+          <div class="form-group">
+            <label for="titulo">Título*</label>
+            <input type="text" id="titulo" formControlName="titulo" placeholder="Digite o título da tarefa">
+            @if (tarefaForm.get('titulo')?.invalid && tarefaForm.get('titulo')?.touched) {
+              <div class="error-message">
+                Título é obrigatório
+              </div>
+            }
+          </div>
+          
+          <div class="form-group">
+            <label for="descricao">Descrição*</label>
+            <textarea id="descricao" formControlName="descricao" rows="3" placeholder="Digite a descrição da tarefa"></textarea>
+            @if (tarefaForm.get('descricao')?.invalid && tarefaForm.get('descricao')?.touched) {
+              <div class="error-message">
+                Descrição é obrigatória
+              </div>
+            }
+          </div>
+          
+          <div class="form-group">
+            <label for="dataTermino">Data de Término*</label>
+            <input type="date" id="dataTermino" formControlName="dataTermino">
+            @if (tarefaForm.get('dataTermino')?.invalid && tarefaForm.get('dataTermino')?.touched) {
+              <div class="error-message">
+                Data de término é obrigatória
+              </div>
+            }
+          </div>
+          
+          <button type="submit" class="btn-primary">Criar Tarefa</button>
+        </form>
+      </section>
+  
+      <section class="card">
+        <h2>Pesquisar Tarefas</h2>
+        <div class="search-container">
+          <input 
+            type="text" 
+            [(ngModel)]="termoPesquisa" 
+            placeholder="Pesquisar por título ou descrição"
+            (keyup.enter)="pesquisarTarefas()">
+          <button (click)="pesquisarTarefas()" class="btn-search">Pesquisar</button>
+          @if (termoPesquisa) {
+            <button (click)="limparPesquisa()" class="btn-clear">Limpar</button>
+          }
+        </div>
+        
+        <div class="tarefas-list">
+          <h3>Lista de Tarefas</h3>
+          @if (tarefas.length === 0) {
+            <div class="empty-state">
+              Nenhuma tarefa encontrada.
+            </div>
+          }
+          
+          @for (tarefa of tarefas; track tarefa.id) {
+            <div class="tarefa-card">
+              <h4>{{ tarefa.titulo }}</h4>
+              <p class="descricao">{{ tarefa.descricao }}</p>
+              <div class="tarefa-datas">
+                <span>Criada em: {{ formatarData(tarefa.dataCriacao) }}</span>
+                <span>Término: {{ formatarData(tarefa.dataTermino) }}</span>
+              </div>
+              <div class="tarefa-acoes">
+                <button class="btn-edit" (click)="editarTarefa(tarefa.id)">Editar</button>
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+    </main>
+  
+    <footer>
+      <p>Sistema de Gerenciamento de Tarefas &copy; 2025</p>
+    </footer>
+  </div>

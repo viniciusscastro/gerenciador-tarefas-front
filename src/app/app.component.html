@@ -10,30 +10,78 @@
         <div class="form-group">
           <label for="titulo">Título*</label>
           <input type="text" id="titulo" formControlName="titulo" placeholder="Digite o título da tarefa">
-          <div class="error-message" *ngIf="tarefaForm.get('titulo')?.invalid && tarefaForm.get('titulo')?.touched">
-            Título é obrigatório
-          </div>
+          @if (tarefaForm.get('titulo')?.invalid && tarefaForm.get('titulo')?.touched) {
+            <div class="error-message">
+              Título é obrigatório
+            </div>
+          }
         </div>
         
         <div class="form-group">
           <label for="descricao">Descrição*</label>
           <textarea id="descricao" formControlName="descricao" rows="3" placeholder="Digite a descrição da tarefa"></textarea>
-          <div class="error-message" *ngIf="tarefaForm.get('descricao')?.invalid && tarefaForm.get('descricao')?.touched">
-            Descrição é obrigatória
-          </div>
+          @if (tarefaForm.get('descricao')?.invalid && tarefaForm.get('descricao')?.touched) {
+            <div class="error-message">
+              Descrição é obrigatória
+            </div>
+          }
         </div>
         
         <div class="form-group">
           <label for="dataTermino">Data de Término*</label>
           <input type="date" id="dataTermino" formControlName="dataTermino">
-          <div class="error-message" *ngIf="tarefaForm.get('dataTermino')?.invalid && tarefaForm.get('dataTermino')?.touched">
-            Data de término é obrigatória
-          </div>
+          @if (tarefaForm.get('dataTermino')?.invalid && tarefaForm.get('dataTermino')?.touched) {
+            <div class="error-message">
+              Data de término é obrigatória
+            </div>
+          }
         </div>
         
         <button type="submit" class="btn-primary">Criar Tarefa</button>
       </form>
     </section>
+
+    @if (modoEdicao && tarefaEditando) {
+      <section class="card" id="edicao-tarefa">
+        <h2>Editar Tarefa</h2>
+        <form [formGroup]="tarefaEditForm" (ngSubmit)="atualizarTarefa()">
+          <div class="form-group">
+            <label for="edit-titulo">Título*</label>
+            <input type="text" id="edit-titulo" formControlName="titulo" placeholder="Digite o título da tarefa">
+            @if (tarefaEditForm.get('titulo')?.invalid && tarefaEditForm.get('titulo')?.touched) {
+              <div class="error-message">
+                Título é obrigatório
+              </div>
+            }
+          </div>
+          
+          <div class="form-group">
+            <label for="edit-descricao">Descrição*</label>
+            <textarea id="edit-descricao" formControlName="descricao" rows="3" placeholder="Digite a descrição da tarefa"></textarea>
+            @if (tarefaEditForm.get('descricao')?.invalid && tarefaEditForm.get('descricao')?.touched) {
+              <div class="error-message">
+                Descrição é obrigatória
+              </div>
+            }
+          </div>
+          
+          <div class="form-group">
+            <label for="edit-dataTermino">Data de Término*</label>
+            <input type="date" id="edit-dataTermino" formControlName="dataTermino">
+            @if (tarefaEditForm.get('dataTermino')?.invalid && tarefaEditForm.get('dataTermino')?.touched) {
+              <div class="error-message">
+                Data de término é obrigatória
+              </div>
+            }
+          </div>
+          
+          <div class="button-group">
+            <button type="submit" class="btn-primary">Salvar Alterações</button>
+            <button type="button" class="btn-cancel" (click)="cancelarEdicao()">Cancelar</button>
+          </div>
+        </form>
+      </section>
+    }
 
     <section class="card">
       <h2>Pesquisar Tarefas</h2>
@@ -44,23 +92,32 @@
           placeholder="Pesquisar por título ou descrição"
           (keyup.enter)="pesquisarTarefas()">
         <button (click)="pesquisarTarefas()" class="btn-search">Pesquisar</button>
-        <button (click)="limparPesquisa()" class="btn-clear" *ngIf="termoPesquisa">Limpar</button>
+        @if (termoPesquisa) {
+          <button (click)="limparPesquisa()" class="btn-clear">Limpar</button>
+        }
       </div>
       
       <div class="tarefas-list">
         <h3>Lista de Tarefas</h3>
-        <div *ngIf="tarefas.length === 0" class="empty-state">
-          Nenhuma tarefa encontrada.
-        </div>
-        
-        <div *ngFor="let tarefa of tarefas" class="tarefa-card">
-          <h4>{{ tarefa.titulo }}</h4>
-          <p class="descricao">{{ tarefa.descricao }}</p>
-          <div class="tarefa-datas">
-            <span>Criada em: {{ formatarData(tarefa.dataCriacao) }}</span>
-            <span>Término: {{ formatarData(tarefa.dataTermino) }}</span>
+        @if (tarefas.length === 0) {
+          <div class="empty-state">
+            Nenhuma tarefa encontrada.
           </div>
-        </div>
+        }
+        
+        @for (tarefa of tarefas; track tarefa.id) {
+          <div class="tarefa-card">
+            <h4>{{ tarefa.titulo }}</h4>
+            <p class="descricao">{{ tarefa.descricao }}</p>
+            <div class="tarefa-datas">
+              <span>Criada em: {{ formatarData(tarefa.dataCriacao) }}</span>
+              <span>Término: {{ formatarData(tarefa.dataTermino) }}</span>
+            </div>
+            <div class="tarefa-acoes">
+              <button class="btn-edit" (click)="iniciarEdicao(tarefa)">Editar</button>
+            </div>
+          </div>
+        }
       </div>
     </section>
   </main>
