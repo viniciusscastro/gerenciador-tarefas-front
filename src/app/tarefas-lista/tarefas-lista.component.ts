@@ -96,6 +96,31 @@ export class TarefasListaComponent implements OnInit {
     this.router.navigate(['/editar-tarefa', id]);
   }
 
+  excluirTarefa(id: number | undefined): void {
+    if (id === undefined) {
+      alert('Erro: ID da tarefa não encontrado');
+      return;
+    }
+
+    // Confirmação antes de excluir
+    if (!confirm('Tem certeza que deseja excluir esta tarefa? Esta ação não pode ser desfeita.')) {
+      return;
+    }
+
+    this.http.delete(`http://localhost:8080/api/tarefas/${id}`)
+      .subscribe({
+        next: () => {
+          // Remover a tarefa da lista após exclusão bem-sucedida
+          this.tarefas = this.tarefas.filter(tarefa => tarefa.id !== id);
+          alert('Tarefa excluída com sucesso!');
+        },
+        error: (error) => {
+          console.error('Erro ao excluir tarefa:', error);
+          alert('Erro ao excluir tarefa. Verifique o console para mais detalhes.');
+        }
+      });
+  }
+
   pesquisarTarefas(): void {
     if (!this.termoPesquisa.trim()) {
       this.carregarTarefas();
